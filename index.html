@@ -1,110 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Standard Deviation Playground</title>
+  <meta charset="UTF-8" />
+  <title>Standard Deviation Playground (Grade 5)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; background:#f9fafb; padding:20px; }
-    h1 { color:#0369a1; }
-    .card { background:white; border:1px solid #ddd; border-radius:12px; padding:16px; margin:12px 0; box-shadow:2px 2px 6px rgba(0,0,0,0.05); }
-    .numbers span { display:inline-block; padding:6px 10px; margin:4px; background:#e0f2fe; border-radius:20px; }
-    .step { margin:8px 0; }
-    input { padding:4px; width:80px; }
-    .ok { color:green; font-weight:bold; }
-    .err { color:red; font-weight:bold; }
-    button { margin-top:12px; padding:6px 12px; border:none; border-radius:6px; cursor:pointer; }
-    .new { background:#0369a1; color:white; }
+    body { margin:0; font-family: system-ui, sans-serif; background:#f8fafc; color:#0f172a; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 24px; }
+    h1 { color:#0369a1; margin:0 0 8px; }
+    .card { background:#fff; border:1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin: 16px 0; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+    .pill { display:inline-block; background:#e0f2fe; padding:6px 10px; border-radius:999px; margin:3px; font-weight:600; }
+    table { width:100%; border-collapse: collapse; margin-top:12px; }
+    th, td { border:1px solid #e5e7eb; padding:8px; text-align:center; }
+    th { background:#f1f5f9; }
+    input { width:90px; max-width:28vw; padding:4px; border:1px solid #e5e7eb; border-radius:6px; text-align:center; }
+    .btn { background:#0369a1; color:#fff; border:0; border-radius:6px; padding:6px 12px; cursor:pointer; margin-top:8px; }
+    .result { margin-top:6px; padding:6px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; }
+    .success { background:#ecfdf5; border:1px solid #bbf7d0; color:#065f46; border-radius:8px; padding:10px; margin-top:12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <h1>Standard Deviation Playground</h1>
 
-<h1>Standard Deviation Playground</h1>
-<p>For curious 5th graders! We'll learn how spread-out numbers are using 6 steps.</p>
+    <!-- (Optional) Short formula refresher -->
+    <section class="card">
+      <h2>What does the formula mean?</h2>
+      <p class="mono">s = √( Σ (xᵢ − x̄)² ÷ (n − 1) )</p>
+      <ul>
+        <li><b>xᵢ</b>: each number • <b>x̄</b>: mean (average) • <b>n</b>: how many numbers • <b>Σ</b>: add them all</li>
+        <li><b>In words:</b> subtract the mean from each number, square it, add them all, divide by n−1, then take the square root.</li>
+      </ul>
+    </section>
 
-<div class="card">
-  <h3>The formula:</h3>
-  <p><b>s = √( Σ (x − x̄)² ÷ (n − 1) )</b></p>
-  <p><i>x̄ is the mean, n is how many numbers, Σ means "add them all".</i></p>
-</div>
+    <!-- Example (kept the same) -->
+    <section class="card">
+      <h2>Example Walkthrough</h2>
+      <p>Numbers:
+        <span class="pill">3</span><span class="pill">5</span>
+        <span class="pill">8</span><span class="pill">2</span>
+        <span class="pill">7</span>
+      </p>
+      <p><b>Mean (x̄) = 5.00</b></p>
+      <table>
+        <thead>
+          <tr><th>xᵢ</th><th>xᵢ − mean</th><th>(xᵢ − mean)²</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>3</td><td>-2.00</td><td>4.00</td></tr>
+          <tr><td>5</td><td>0.00</td><td>0.00</td></tr>
+          <tr><td>8</td><td>3.00</td><td>9.00</td></tr>
+          <tr><td>2</td><td>-3.00</td><td>9.00</td></tr>
+          <tr><td>7</td><td>2.00</td><td>4.00</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><th colspan="2">Sum of squares</th><th>26.00</th></tr>
+        </tfoot>
+      </table>
+      <p>Variance = 26 ÷ 4 = 6.50</p>
+      <p>Standard deviation = √6.50 = 2.55</p>
+    </section>
 
-<div class="card">
-  <h3>Example Walkthrough</h3>
-  <p>Numbers: <span class="numbers" id="nums"></span></p>
-  <div id="steps"></div>
-</div>
+    <!-- Practice (new numbers) -->
+    <section class="card">
+      <h2>Practice Yourself</h2>
+      <p>Numbers:
+        <span class="pill">4</span><span class="pill">6</span>
+        <span class="pill">9</span><span class="pill">3</span>
+        <span class="pill">8</span>
+      </p>
 
-<div class="card">
-  <h3>Practice</h3>
-  <p id="practiceNums"></p>
-  <div id="practiceSteps"></div>
-  <button class="new" onclick="newPractice()">New Problem</button>
-  <p id="feedback"></p>
-</div>
+      <!-- Step 1 -->
+      <p><b>Step 1: Mean</b></p>
+      <div class="mono">
+        mean = (4 + 6 + 9 + 3 + 8) ÷ 5 =
+        <input id="meanInput" type="number" step="0.01" placeholder="your mean">
+        <button class="btn" onclick="checkMean()">Check Mean</button>
+      </div>
+      <div id="meanOut" class="result"></div>
 
-<script>
-function mean(arr){ return arr.reduce((a,b)=>a+b,0)/arr.length; }
-function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
-function round(x){ return Math.round(x*100)/100; }
+      <!-- Step 2–3 table (blank) -->
+      <p><b>Step 2–3: Differences and Squares</b></p>
+      <table>
+        <thead>
+          <tr><th>xᵢ</th><th>xᵢ − mean</th><th>(xᵢ − mean)²</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>4</td><td><input id="d1" placeholder="diff"></td><td><input id="s1" placeholder="square"></td></tr>
+          <tr><td>6</td><td><input id="d2" placeholder="diff"></td><td><input id="s2" placeholder="square"></td></tr>
+          <tr><td>9</td><td><input id="d3" placeholder="diff"></td><td><input id="s3" placeholder="square"></td></tr>
+          <tr><td>3</td><td><input id="d4" placeholder="diff"></td><td><input id="s4" placeholder="square"></td></tr>
+          <tr><td>8</td><td><input id="d5" placeholder="diff"></td><td><input id="s5" placeholder="square"></td></tr>
+        </tbody>
+        <tfoot>
+          <tr><th colspan="2">Sum of squares</th><th><input id="sumSquares" placeholder="total"></th></tr>
+        </tfoot>
+      </table>
+      <button class="btn" onclick="checkTable()">Check Table</button>
+      <div id="tableOut" class="result"></div>
 
-function compute(arr){
-  const m = mean(arr);
-  const diffs = arr.map(x=>x-m);
-  const squares = diffs.map(d=>d*d);
-  const ss = sum(squares);
-  const variance = ss/(arr.length-1);
-  const sd = Math.sqrt(variance);
-  return {m,diffs,squares,ss,variance,sd};
-}
+      <!-- Step 4–5: Variance with two blanks -->
+      <p><b>Step 4–5: Variance</b></p>
+      <div class="mono">
+        Variance =
+        (<input id="varSS" placeholder="sum of squares"> ÷
+        <input id="varDen" placeholder="n−1">)
+        <button class="btn" onclick="computeVariance()">Compute Variance</button>
+      </div>
+      <div id="varOut" class="result"></div>
 
-// ---------- Example ----------
-const example = [3,5,8,2,7];
-const ex = compute(example);
-document.getElementById("nums").innerHTML = example.map(n=>`<span>${n}</span>`).join("");
-document.getElementById("steps").innerHTML = `
-  <div class="step">1) Mean = (${example.join("+")}) ÷ ${example.length} = <b>${round(ex.m)}</b></div>
-  <div class="step">2) Subtract mean: ${example.map((x,i)=>`${x}-${round(ex.m)}=${round(ex.diffs[i])}`).join(", ")}</div>
-  <div class="step">3) Square: ${ex.squares.map((s,i)=>`(${round(ex.diffs[i])})²=${round(s)}`).join(", ")}</div>
-  <div class="step">4) Sum squares = ${round(ex.ss)}</div>
-  <div class="step">5) Divide by n−1 (${example.length-1}) = <b>${round(ex.variance)}</b></div>
-  <div class="step">6) Square root = <b>${round(ex.sd)}</b></div>
-`;
+      <!-- Step 6: SD with compute then answer -->
+      <p><b>Step 6: Standard Deviation</b></p>
+      <div class="mono">
+        Enter variance:
+        <input id="sdVar" placeholder="variance">
+        <button class="btn" onclick="computeSD()">Compute SD</button>
+      </div>
+      <div id="sdCalc" class="result"></div>
+      <div class="mono" style="margin-top:8px;">
+        Answer = <input id="sdInput" placeholder="type your SD">
+        <button class="btn" onclick="checkSD()">Check Answer</button>
+      </div>
+      <div id="sdOut" class="result"></div>
 
-// ---------- Practice ----------
-let practiceArr, answers;
-function newPractice(){
-  practiceArr = Array.from({length:5},()=>Math.floor(Math.random()*11));
-  const c = compute(practiceArr);
-  answers = c;
-  document.getElementById("practiceNums").innerHTML = "Numbers: " + practiceArr.join(", ");
-  const stepHtml = `
-    <div class="step">1) Mean = <input id="aMean"></div>
-    <div class="step">2) Differences: ${practiceArr.map((n,i)=>`${n}−mean=<input id="d${i}" size="5">`).join(" ")}</div>
-    <div class="step">3) Squares: ${practiceArr.map((n,i)=>`(<input id="s${i}" size="5">)`).join(" ")}</div>
-    <div class="step">4) Sum squares = <input id="aSS"></div>
-    <div class="step">5) Variance = <input id="aVar"></div>
-    <div class="step">6) SD = <input id="aSD"></div>
-    <button onclick="checkAnswers()">Check</button>
-  `;
-  document.getElementById("practiceSteps").innerHTML = stepHtml;
-  document.getElementById("feedback").innerHTML = "";
-}
+      <div id="congrats" class="success" style="display:none;">
+        🎉 Great job! You found the standard deviation.
+      </div>
 
-function nearlyEqual(a,b){ return Math.abs(a-b) < 0.1; }
+      <div style="margin-top:12px;">
+        <button class="btn" onclick="resetPractice()">Reset All Inputs</button>
+      </div>
+    </section>
+  </div>
 
-function checkAnswers(){
-  let ok=true, msgs=[];
-  const get=(id)=>parseFloat(document.getElementById(id)?.value);
-  if(!nearlyEqual(get("aMean"), round(answers.m))){ ok=false; msgs.push("Mean"); }
-  answers.diffs.forEach((d,i)=>{ if(!nearlyEqual(get("d"+i), round(d))) ok=false; });
-  answers.squares.forEach((s,i)=>{ if(!nearlyEqual(get("s"+i), round(s))) ok=false; });
-  if(!nearlyEqual(get("aSS"), round(answers.ss))){ ok=false; msgs.push("Sum"); }
-  if(!nearlyEqual(get("aVar"), round(answers.variance))){ ok=false; msgs.push("Variance"); }
-  if(!nearlyEqual(get("aSD"), round(answers.sd))){ ok=false; msgs.push("SD"); }
-  document.getElementById("feedback").innerHTML = ok ? "<span class='ok'>🎉 Great job! All correct.</span>" : "<span class='err'>Some answers need checking.</span>";
-}
+  <script>
+    // Correct answers for PRACTICE: 4, 6, 9, 3, 8
+    const correct = {
+      mean: 6.00,
+      diffs: [-2, 0, 3, -3, 2],
+      squares: [4, 0, 9, 9, 4],
+      sumSquares: 26,
+      variance: 6.5,
+      sd: 2.55
+    };
+    const tol = 0.01;
+    const close = (a,b)=>Math.abs(a-b)<=tol;
 
-newPractice();
-</script>
+    function checkMean(){
+      const val = parseFloat(document.getElementById('meanInput').value);
+      document.getElementById('meanOut').textContent =
+        close(val, correct.mean) ? "✅ Correct! Mean = 6.00" : "❌ Try again.";
+    }
 
+    function checkTable(){
+      let ok = true;
+      ['d1','d2','d3','d4','d5'].forEach((id,i)=>{
+        const v = parseFloat(document.getElementById(id).value);
+        if(!close(v, correct.diffs[i])) ok = false;
+      });
+      ['s1','s2','s3','s4','s5'].forEach((id,i)=>{
+        const v = parseFloat(document.getElementById(id).value);
+        if(!close(v, correct.squares[i])) ok = false;
+      });
+      const ss = parseFloat(document.getElementById('sumSquares').value);
+      if(!close(ss, correct.sumSquares)) ok = false;
+
+      document.getElementById('tableOut').textContent = ok ? "✅ Table correct!" : "❌ Check differences/squares/total.";
+    }
+
+    function computeVariance(){
+      const ss = parseFloat(document.getElementById('varSS').value);
+      const den = parseFloat(document.getElementById('varDen').value);
+      const out = document.getElementById('varOut');
+      if(Number.isNaN(ss) || Number.isNaN(den) || den === 0){
+        out.textContent = "❌ Please enter both numbers (and n−1 can’t be 0).";
+        return;
+      }
+      const v = ss / den;
+      out.textContent = "Variance = " + v.toFixed(2);
+      // convenience: prefill SD variance input
+      document.getElementById('sdVar').value = v.toFixed(2);
+    }
+
+    function computeSD(){
+      const v = parseFloat(document.getElementById('sdVar').value);
+      const out = document.getElementById('sdCalc');
+      if(Number.isNaN(v) || v < 0){
+        out.textContent = "❌ Please enter a non-negative variance.";
+        return;
+      }
+      const sd = Math.sqrt(v);
+      out.textContent = "√" + v.toFixed(2) + " = " + sd.toFixed(2);
+    }
+
+    function checkSD(){
+      const val = parseFloat(document.getElementById('sdInput').value);
+      const out = document.getElementById('sdOut');
+      if(close(val, correct.sd)){
+        out.textContent = "✅ SD correct!";
+        document.getElementById('congrats').style.display = "block";
+      } else {
+        out.textContent = "❌ Try again.";
+        document.getElementById('congrats').style.display = "none";
+      }
+    }
+
+    function resetPractice(){
+      [
+        'meanInput','d1','d2','d3','d4','d5','s1','s2','s3','s4','s5',
+        'sumSquares','varSS','varDen','sdVar','sdInput'
+      ].forEach(id => { const el = document.getElementById(id); if(el) el.value = ""; });
+      ['meanOut','tableOut','varOut','sdCalc','sdOut'].forEach(id => {
+        const el = document.getElementById(id); if(el) el.textContent = "";
+      });
+      document.getElementById('congrats').style.display = "none";
+    }
+  </script>
 </body>
 </html>
