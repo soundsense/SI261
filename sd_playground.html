@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Standard Deviation Playground</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f9fafb; padding:20px; }
+    h1 { color:#0369a1; }
+    .card { background:white; border:1px solid #ddd; border-radius:12px; padding:16px; margin:12px 0; box-shadow:2px 2px 6px rgba(0,0,0,0.05); }
+    .numbers span { display:inline-block; padding:6px 10px; margin:4px; background:#e0f2fe; border-radius:20px; }
+    .step { margin:8px 0; }
+    input { padding:4px; width:80px; }
+    .ok { color:green; font-weight:bold; }
+    .err { color:red; font-weight:bold; }
+    button { margin-top:12px; padding:6px 12px; border:none; border-radius:6px; cursor:pointer; }
+    .new { background:#0369a1; color:white; }
+  </style>
+</head>
+<body>
+
+<h1>Standard Deviation Playground</h1>
+<p>For curious 5th graders! We'll learn how spread-out numbers are using 6 steps.</p>
+
+<div class="card">
+  <h3>The formula:</h3>
+  <p><b>s = √( Σ (x − x̄)² ÷ (n − 1) )</b></p>
+  <p><i>x̄ is the mean, n is how many numbers, Σ means "add them all".</i></p>
+</div>
+
+<div class="card">
+  <h3>Example Walkthrough</h3>
+  <p>Numbers: <span class="numbers" id="nums"></span></p>
+  <div id="steps"></div>
+</div>
+
+<div class="card">
+  <h3>Practice</h3>
+  <p id="practiceNums"></p>
+  <div id="practiceSteps"></div>
+  <button class="new" onclick="newPractice()">New Problem</button>
+  <p id="feedback"></p>
+</div>
+
+<script>
+function mean(arr){ return arr.reduce((a,b)=>a+b,0)/arr.length; }
+function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
+function round(x){ return Math.round(x*100)/100; }
+
+function compute(arr){
+  const m = mean(arr);
+  const diffs = arr.map(x=>x-m);
+  const squares = diffs.map(d=>d*d);
+  const ss = sum(squares);
+  const variance = ss/(arr.length-1);
+  const sd = Math.sqrt(variance);
+  return {m,diffs,squares,ss,variance,sd};
+}
+
+// ---------- Example ----------
+const example = [3,5,8,2,7];
+const ex = compute(example);
+document.getElementById("nums").innerHTML = example.map(n=>`<span>${n}</span>`).join("");
+document.getElementById("steps").innerHTML = `
+  <div class="step">1) Mean = (${example.join("+")}) ÷ ${example.length} = <b>${round(ex.m)}</b></div>
+  <div class="step">2) Subtract mean: ${example.map((x,i)=>`${x}-${round(ex.m)}=${round(ex.diffs[i])}`).join(", ")}</div>
+  <div class="step">3) Square: ${ex.squares.map((s,i)=>`(${round(ex.diffs[i])})²=${round(s)}`).join(", ")}</div>
+  <div class="step">4) Sum squares = ${round(ex.ss)}</div>
+  <div class="step">5) Divide by n−1 (${example.length-1}) = <b>${round(ex.variance)}</b></div>
+  <div class="step">6) Square root = <b>${round(ex.sd)}</b></div>
+`;
+
+// ---------- Practice ----------
+let practiceArr, answers;
+function newPractice(){
+  practiceArr = Array.from({length:5},()=>Math.floor(Math.random()*11));
+  const c = compute(practiceArr);
+  answers = c;
+  document.getElementById("practiceNums").innerHTML = "Numbers: " + practiceArr.join(", ");
+  const stepHtml = `
+    <div class="step">1) Mean = <input id="aMean"></div>
+    <div class="step">2) Differences: ${practiceArr.map((n,i)=>`${n}−mean=<input id="d${i}" size="5">`).join(" ")}</div>
+    <div class="step">3) Squares: ${practiceArr.map((n,i)=>`(<input id="s${i}" size="5">)`).join(" ")}</div>
+    <div class="step">4) Sum squares = <input id="aSS"></div>
+    <div class="step">5) Variance = <input id="aVar"></div>
+    <div class="step">6) SD = <input id="aSD"></div>
+    <button onclick="checkAnswers()">Check</button>
+  `;
+  document.getElementById("practiceSteps").innerHTML = stepHtml;
+  document.getElementById("feedback").innerHTML = "";
+}
+
+function nearlyEqual(a,b){ return Math.abs(a-b) < 0.1; }
+
+function checkAnswers(){
+  let ok=true, msgs=[];
+  const get=(id)=>parseFloat(document.getElementById(id)?.value);
+  if(!nearlyEqual(get("aMean"), round(answers.m))){ ok=false; msgs.push("Mean"); }
+  answers.diffs.forEach((d,i)=>{ if(!nearlyEqual(get("d"+i), round(d))) ok=false; });
+  answers.squares.forEach((s,i)=>{ if(!nearlyEqual(get("s"+i), round(s))) ok=false; });
+  if(!nearlyEqual(get("aSS"), round(answers.ss))){ ok=false; msgs.push("Sum"); }
+  if(!nearlyEqual(get("aVar"), round(answers.variance))){ ok=false; msgs.push("Variance"); }
+  if(!nearlyEqual(get("aSD"), round(answers.sd))){ ok=false; msgs.push("SD"); }
+  document.getElementById("feedback").innerHTML = ok ? "<span class='ok'>🎉 Great job! All correct.</span>" : "<span class='err'>Some answers need checking.</span>";
+}
+
+newPractice();
+</script>
+
+</body>
+</html>
